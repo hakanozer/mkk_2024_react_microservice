@@ -1,9 +1,9 @@
 import React, { FormEvent, useState } from 'react'
-import { call } from '../util/util'
 import { IUser } from '../models/IUser'
 import { Car } from '../util/car'
 import { login, useLogin } from '../services/loginService'
 import { useNavigate } from 'react-router-dom'
+import { storeUser } from '../util/util'
 
 function Login() {
 
@@ -24,7 +24,8 @@ function Login() {
         
         login(username, password).then(res => {
             const dt = res.data
-           navigate('/dashboard')
+            storeUser(dt)
+            navigate('/dashboard')
         }).catch(err => {
             console.log(err.message)
             setMessage('username or password fail!')
