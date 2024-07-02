@@ -2,13 +2,18 @@ import React, { FormEvent, useState } from 'react'
 import { call } from '../util/util'
 import { IUser } from '../models/IUser'
 import { Car } from '../util/car'
+import { login, useLogin } from '../services/loginService'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('emilys')
+  const [password, setPassword] = useState('emilyspass')
   const [message, setMessage] = useState('')
-
+  
+  const navigate =  useNavigate()
+  //const { login } = useLogin()
+  
   const customerLogin = (evt: FormEvent) => {
     evt.preventDefault()
     if (username == '') {
@@ -16,7 +21,15 @@ function Login() {
     }else if (password == '') {
         setMessage('Password Empty!')
     }else {
-        console.log("form send", username, password)
+        
+        login(username, password).then(res => {
+            const dt = res.data
+           navigate('/dashboard')
+        }).catch(err => {
+            console.log(err.message)
+            setMessage('username or password fail!')
+        })
+       
     }
   }
 
@@ -53,10 +66,10 @@ function Login() {
                 }
                 <form onSubmit={customerLogin}>
                     <div className='mb-3'>
-                        <input onChange={(evt) => setUsername(evt.target.value)} className='form-control' placeholder='Username' />
+                        <input value={username} onChange={(evt) => setUsername(evt.target.value)} className='form-control' placeholder='Username' />
                     </div>
                     <div className='mb-3'>
-                        <input onChange={(evt) => setPassword(evt.target.value)} type='password' className='form-control' placeholder='Password' />
+                        <input value={password} onChange={(evt) => setPassword(evt.target.value)} type='password' className='form-control' placeholder='Password' />
                     </div>
                     <button className='btn btn-success'>Send</button>
                     { user.profile }
