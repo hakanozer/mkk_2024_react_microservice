@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { ElementRef, useEffect, useRef, useState } from 'react'
 import { products } from '../services/productService'
 import { Product } from '../models/IProducts'
 import ProductItem from '../components/ProductItem'
 
 function Dashboard() {
 
+  const searchRef = useRef<ElementRef<'input'>>(null)
   const [search, setSearch] = useState('')
   const [arrPro, setArrPro] = useState<Product[]>([])
   useEffect(() => {
+    if (searchRef) {
+      searchRef.current?.focus()
+    }
     products().then(res => {
       const arr = res.data.products
       setArrPro(arr)
@@ -26,8 +30,8 @@ function Dashboard() {
 
   return (
     <>
-      <div className='col-sm-3 mt-3'>
-        <input onChange={(evt) => setSearch(evt.target.value)} className='form-control' placeholder='Search..' />
+      <div className='col-sm-3 mt-3 mb-3'>
+        <input ref={searchRef} onChange={(evt) => setSearch(evt.target.value)} className='form-control' placeholder='Search..' />
       </div>
       <div className='row'>
         { arrPro.map((item, index) =>
