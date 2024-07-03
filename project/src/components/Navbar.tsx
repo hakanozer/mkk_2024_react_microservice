@@ -1,10 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { ICustomer } from '../models/ICustomer'
+import { useDispatch, useSelector } from 'react-redux'
+import { StateType } from '../useRedux/Store'
+import { allLikes } from '../util/util'
+import { LikesAction } from '../useRedux/LikesAction'
+import { LikesType } from '../useRedux/LikesType'
+import { useCartStore } from '../stores/cartStore'
 
 function Navbar( props: {user: ICustomer} ) {
 
+  const allLikesArr = useSelector((obj: StateType) => obj.LikesReducer)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const items = useCartStore((state) => state.items)
+  
+  useEffect(() => {
+    const arr = allLikes()
+    const sendObj: LikesAction = {
+      type: LikesType.LIKES_ADD,
+      payload: arr
+    } 
+    dispatch(sendObj)
+  }, [])
+
   const logout = () => {
     localStorage.removeItem('customer')
     navigate('/')
@@ -37,7 +56,7 @@ function Navbar( props: {user: ICustomer} ) {
             </ul>
             </li>
             <li className="nav-item">
-            <a className="nav-link disabled" aria-disabled="true">{props.user.firstName} {props.user.lastName}</a>
+            <a className="nav-link disabled" aria-disabled="true">{props.user.firstName} {props.user.lastName} ({allLikesArr.length}) - Cart: ({items.length})</a>
             </li>
         </ul>
         <form className="d-flex" role="search">
