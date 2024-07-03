@@ -13,8 +13,8 @@ import Layout from './pages/Layout'
 const routes =
 <BrowserRouter>
   <Routes>
+    <Route path='/' element={<Login/>}/>
     <Route path='/' element={<Layout />} >
-      <Route path='/' element={<Login/>}/>
       <Route path='/dashboard' element={ <Control item={<Dashboard/>}/> }/>
       <Route path='/profile' element={ <Control item={<Profile/>}/> }/>
     </Route>
