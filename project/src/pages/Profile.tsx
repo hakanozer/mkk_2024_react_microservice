@@ -1,8 +1,24 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { TokenContext } from '../util/TokenContext'
+import { Helmet } from 'react-helmet'
 
 function Profile() {
+
+  const tokenContext = useContext(TokenContext)
+  useEffect(() => {
+    tokenContext.setToken("newToken123")
+  }, [])
+  
   return (
-    <div>Profile</div>
+    <>
+      <Helmet>
+        <title>Profile</title>
+        <meta name="description" content="Profile Detail" />
+      </Helmet>
+      <div>Profile</div>
+      {tokenContext.token}
+    </>
+    
   )
 }
 

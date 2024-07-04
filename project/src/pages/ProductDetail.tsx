@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Product } from '../models/IProducts'
 import Slider from '../components/Slider'
@@ -7,6 +7,8 @@ import { useDispatch } from 'react-redux'
 import { LikesAction } from '../useRedux/LikesAction'
 import { LikesType } from '../useRedux/LikesType'
 import { useCartStore } from '../stores/cartStore'
+import { TokenContext } from '../util/TokenContext'
+import { Helmet } from 'react-helmet'
 
 function ProductDetail() {
   
@@ -15,7 +17,12 @@ function ProductDetail() {
   const item = location.state as Product
   const dispatch = useDispatch()
   const addItem = useCartStore((state) => state.addItem)
+  const tokenContext = useContext(TokenContext)
 
+  useEffect(() => {
+    tokenContext.setToken(item.title)
+  }, [])
+  
   const likeFnc = () => {
     fncLikes(item.id)
     const arr = allLikes()
@@ -29,6 +36,10 @@ function ProductDetail() {
 
   return (
     <>
+      <Helmet>
+        <title>{item.title}</title>
+        <meta name="description" content={item.description} />
+      </Helmet>
         <div className='row'>
             <div className='col-sm-6'>
                 <h2>{item.title}</h2>

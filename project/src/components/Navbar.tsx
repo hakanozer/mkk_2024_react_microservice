@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { FormEvent, useContext, useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { ICustomer } from '../models/ICustomer'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,9 +7,11 @@ import { allLikes } from '../util/util'
 import { LikesAction } from '../useRedux/LikesAction'
 import { LikesType } from '../useRedux/LikesType'
 import { useCartStore } from '../stores/cartStore'
+import { TokenContext } from '../util/TokenContext'
 
 function Navbar( props: {user: ICustomer} ) {
 
+  const tokenContext = useContext(TokenContext)
   const allLikesArr = useSelector((obj: StateType) => obj.LikesReducer)
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -27,6 +29,12 @@ function Navbar( props: {user: ICustomer} ) {
   const logout = () => {
     localStorage.removeItem('customer')
     navigate('/')
+  }
+
+  const [q, setQ] = useState('')
+  const searchFnc = (evt: FormEvent) => {
+    evt.preventDefault()
+    navigate('/search?q='+q)
   }
 
   return (
@@ -56,11 +64,11 @@ function Navbar( props: {user: ICustomer} ) {
             </ul>
             </li>
             <li className="nav-item">
-            <a className="nav-link disabled" aria-disabled="true">{props.user.firstName} {props.user.lastName} ({allLikesArr.length}) - Cart: ({items.length})</a>
+            <a className="nav-link disabled" aria-disabled="true">{props.user.firstName} {props.user.lastName} ({allLikesArr.length}) - Cart: ({items.length}) - {tokenContext.token}</a>
             </li>
         </ul>
-        <form className="d-flex" role="search">
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+        <form onSubmit={searchFnc} className="d-flex" role="search">
+            <input onChange={(evt) => setQ(evt.target.value)} className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
             <button className="btn btn-outline-success" type="submit">Search</button>
         </form>
         </div>
