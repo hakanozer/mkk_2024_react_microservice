@@ -3,6 +3,10 @@ package com.works.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -28,5 +32,9 @@ public class Product {
     @Min(1)
     @NotNull
     private Integer price;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch( FetchMode.SELECT )
+    private List<Category> categories;
 
 }
