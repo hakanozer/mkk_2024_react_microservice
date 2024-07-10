@@ -18,7 +18,7 @@ public class CustomerRestController {
         return customerService.register(customer);
     }
 
-    @GetMapping("login")
+    @PostMapping("login")
     public Authentication login() {
         return customerService.login();
     }

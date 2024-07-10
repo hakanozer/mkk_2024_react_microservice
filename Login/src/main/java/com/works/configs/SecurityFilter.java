@@ -28,6 +28,8 @@ public class SecurityFilter {
                         authorize -> authorize
                                 .requestMatchers("/customer/register").permitAll()
                                 .requestMatchers("/customer/login").permitAll()
+                                .requestMatchers("/basket/**").hasRole("basket")
+                                .requestMatchers("/product/**").hasRole("product")
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
